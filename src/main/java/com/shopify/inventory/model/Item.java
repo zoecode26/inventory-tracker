@@ -13,15 +13,15 @@ import java.util.Objects;
 @Table(name = "items")
 public class Item {
     @Id
+    @Column
+    @NotEmpty
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column
-    @NotEmpty
     private String name;
 
     @Column
-    @NotEmpty
     private Integer quantity;
 
     public Item() { }
