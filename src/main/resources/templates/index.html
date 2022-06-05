@@ -3,18 +3,23 @@
         <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/styles.css}">
     </head>
     <h1> Inventory Tracker </h1>
+    <h3> Item methods: </h3>
     <nav>
         <ul>
             <li><a href="items">Get all items</a></li>
-            <li><a href="items/get-id">Get item by ID</a></li>
-            <li><a href="items/get-name">Get item/s by name</a></li>
+            <li><a href="items/get-item">Get item by ID</a></li>
+            <li><a href="items/get-item-by-name">Get item/s by name</a></li>
             <li><a href="items/create-item">Add new item</a></li>
             <li><a href="items/delete-item">Delete an item</a></li>
             <li><a href="items/update-item">Update an item</a></li>
+        </ul>
+    </nav>
+    <h3> Shipment methods: </h3>
+    <nav>
+        <ul>
             <li><a href="items">Get all shipments</a></li>
             <li><a href="shipments/get-shipment-by-id">Get shipment by ID</a></li>
             <li><a href="shipments/create-shipment">Create a shipment</a></li>
-
         </ul>
     </nav>
 </html>

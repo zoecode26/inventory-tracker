@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/styles.css}">
 </head>
 <body>
-<form action="get-id" method="post">
+<h2> Enter ID of Item </h2>
+<form th:action="${action}" method="post">
     <p>Item ID: <input type="text" name="id"/></p>
     <p><input type="submit" value="Submit" />
 </form>

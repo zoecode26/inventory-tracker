@@ -15,3 +15,7 @@ th, td {
 th {
     text-align: left;
 }
+
+input {
+    font-size: 16px;
+}

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/styles.css}">
 </head>
 <body>
-<form action="#" th:action="@{/items}" th:object="${item}" method="post">
+<form action="#" th:action="@{/items/perform-create}" th:object="${item}" method="post">
     <p>Item name: <input type="text" th:field="*{name}" /></p>
     <p>Quantity: <input type="text" th:field="*{quantity}" /></p>
     <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
