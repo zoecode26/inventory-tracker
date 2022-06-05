@@ -5,7 +5,6 @@ import com.shopify.inventory.model.Item;
 
 import java.util.List;
 import java.util.Optional;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -73,5 +72,44 @@ public class ItemController {
             return "items";
         }
         return "Items with name not found";
+    }
+
+    @GetMapping("/delete-item")
+    public String getDeleteItem() {
+        return "delete-item";
+    }
+
+    @PostMapping("/delete-item")
+    public String performDeleteItem(@RequestParam String id, Model model) {
+        itemDAO.deleteById(Long.parseLong(id));
+        Iterable<Item> items = itemDAO.findAll();
+        model.addAttribute("items", items);
+        return "items";
+    }
+
+    @GetMapping("/update-item")
+    public String getUpdateItem() {
+        return "update-item";
+    }
+
+    @PostMapping("/update-item")
+    public String displayUpdateForm(@RequestParam String id, Model model) {
+        Optional<Item> item = itemDAO.findById(Long.parseLong(id));
+        if (item.isPresent()) {
+            model.addAttribute("item", item.get());
+            return "update-details";
+        }
+        return "Item with ID not found";
+    }
+
+    @PostMapping("/update-details")
+    public String performUpdate(@RequestParam String name, @RequestParam String quantity, @RequestParam String id, Model model) {
+        Item item = itemDAO.findById(Long.parseLong(id)).get();
+        item.setName(name);
+        item.setQuantity(Integer.parseInt(quantity));
+        itemDAO.save(item);
+
+        model.addAttribute("items", item);
+        return "items";
     }
 }

@@ -18,15 +18,19 @@ public class ShipmentItem {
     @Column(name = "shipment_id")
     private Long shipmentId;
 
-    @Column(name = "vegetable_id")
-    private Long vegetableId;
+    @Column(name = "item_id")
+    private Long itemId;
+
+    @Column(name = "quantity")
+    private Integer quantity;
 
     public ShipmentItem() { }
 
-    public ShipmentItem(Long id, Long shipmentId, Long vegetableId) {
+    public ShipmentItem(Long id, Long shipmentId, Long itemId, Integer quantity) {
         this.id = id;
         this.shipmentId = shipmentId;
-        this.vegetableId = vegetableId;
+        this.itemId = itemId;
+        this.quantity = quantity;
     }
 
     public Long getId() {
@@ -45,25 +49,29 @@ public class ShipmentItem {
         this.shipmentId = shipmentId;
     }
 
-    public Long getVegetableId() {
-        return vegetableId;
+    public Long getItemId() {
+        return itemId;
     }
 
-    public void setVegetableId(Long vegetableId) {
-        this.vegetableId = vegetableId;
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
+
+    public Integer getQuantity() { return quantity; }
+
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ShipmentItem that = (ShipmentItem) o;
-        return Objects.equals(id, that.id) && Objects.equals(shipmentId, that.shipmentId) && Objects.equals(vegetableId, that.vegetableId);
+        return Objects.equals(id, that.id) && Objects.equals(shipmentId, that.shipmentId) && Objects.equals(itemId, that.itemId) && Objects.equals(quantity, that.quantity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, shipmentId, vegetableId);
+        return Objects.hash(id, shipmentId, itemId, quantity);
     }
 
     @Override
@@ -71,7 +79,8 @@ public class ShipmentItem {
         return "ShipmentItem{" +
                 "id=" + id +
                 ", shipmentId=" + shipmentId +
-                ", vegetableId=" + vegetableId +
+                ", itemId=" + itemId +
+                ", quantity=" + quantity +
                 '}';
     }
 }

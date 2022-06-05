@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Shipments</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            font-size: 20px;
+        }
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+        th, td {
+          padding: 10px;
+        }
+        th {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Customer name</th>
+        <th>Date</th>
+        <th>Address line 1</th>
+        <th>Address line 2</th>
+        <th>City</th>
+        <th>County</th>
+        <th>Postcode</th>
+    </tr>
+    <tr th:each="shipment: ${shipments}">
+        <td th:text="${shipment.id}"></td>
+        <td th:text="${shipment.customerName}"></td>
+        <td th:text="${shipment.date}"></td>
+        <td th:text="${shipment.addressLineOne}"></td>
+        <td th:text="${shipment.addressLineTwo}"></td>
+        <td th:text="${shipment.city}"></td>
+        <td th:text="${shipment.county}"></td>
+        <td th:text="${shipment.postcode}"></td>
+    </tr>
+<table>
+</body>
+</html>

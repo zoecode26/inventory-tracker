@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            font-size: 20px;
+        }
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+        th, td {
+          padding: 10px;
+        }
+        th {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <form action="populate-new-shipment" method="post">
+        <table>
+            <tr>
+                <th>Item ID</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Shipment Quantity</th>
+            </tr>
+            <tr th:each="item: ${items}">
+                <td th:text="${item.id}"></td>
+                <td th:text="${item.name}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td><input type="text" value="0" th:name="${item.id}" /></td>
+            </tr>
+        <table>
+        <input type="hidden" name="id" th:value="${shipment.id}" />
+        <p><input type="submit" value="Submit" /></p>
+    </form>
+</body>
+</html>

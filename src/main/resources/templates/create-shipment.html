@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="create-new-shipment" th:object="${shipment}" method="post">
+    <p>Customer name: <input type="text" th:field="*{customerName}"/></p>
+    <p>Date: <input type="date" th:field="*{date}"/></p>
+    <p>Address line 1: <input type="text" th:field="*{addressLineOne}"/></p>
+    <p>Address line 2: <input type="text" th:field="*{addressLineTwo}"/></p>
+    <p>City: <input type="text" th:field="*{city}"/></p>
+    <p>County: <input type="text" th:field="*{county}"/></p>
+    <p>Postcode: <input type="text" th:field="*{postcode}"/></p>
+    <p><input type="submit" value="Submit" />
+</form>
+</body>
+</html>

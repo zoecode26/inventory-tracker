@@ -1,5 +1,7 @@
 package com.shopify.inventory.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +19,7 @@ public class Shipment {
     private long id;
 
     @Column
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
 
     @Column
