@@ -1,10 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+    <meta charset="UTF-8">
+    <title>Items</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            font-size: 20px;
+        }
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+        th, td {
+          padding: 10px;
+        }
+        th {
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-
+<table>
+    <tr>
+        <th>Item ID</th>
+        <th>Name</th>
+        <th>Quantity</th>
+    </tr>
+    <tr th:each="item: ${items}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.name}"></td>
+        <td th:text="${item.quantity}"></td>
+    </tr>
+    <table>
 </body>
 </html>
