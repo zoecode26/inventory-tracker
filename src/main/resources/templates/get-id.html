@@ -2,14 +2,17 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Enter ID</title>
     <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/styles.css}">
 </head>
 <body>
-<h2> Enter ID of Item </h2>
-<form th:action="${action}" method="post">
-    <p>Item ID: <input type="text" name="id"/></p>
-    <p><input type="submit" value="Submit" />
-</form>
+    <form action="/">
+        <input type="submit" value="Home" />
+    </form>
+    <h2> Enter ID of Item </h2>
+    <form th:action="${action}" method="post">
+        <p>Item ID: <input type="text" name="id"/></p>
+        <p><input type="submit" value="Submit" />
+    </form>
 </body>
 </html>

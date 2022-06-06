@@ -6,17 +6,21 @@
     <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/styles.css}">
 </head>
 <body>
-<table>
-    <tr>
-        <th>Item ID</th>
-        <th>Name</th>
-        <th>Quantity</th>
-    </tr>
-    <tr th:each="item: ${items}">
-        <td th:text="${item.id}"></td>
-        <td th:text="${item.name}"></td>
-        <td th:text="${item.quantity}"></td>
-    </tr>
-<table>
+    <form action="/">
+        <input type="submit" value="Home" />
+    </form>
+    <h2> Items </h2>
+    <table>
+        <tr>
+            <th>Item ID</th>
+            <th>Name</th>
+            <th>Quantity</th>
+        </tr>
+        <tr th:each="item: ${items}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.name}"></td>
+            <td th:text="${item.quantity}"></td>
+        </tr>
+    </table>
 </body>
 </html>

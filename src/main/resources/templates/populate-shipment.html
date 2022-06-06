@@ -2,11 +2,15 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Shipment Items</title>
     <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/styles.css}">
 </head>
 <body>
-    <form action="populate-new-shipment" method="post">
+    <form action="/">
+        <input type="submit" value="Home" />
+    </form>
+    <h2> Shipment Items </h2>
+    <form action="perform-populate-shipment" method="post">
         <table>
             <tr>
                 <th>Item ID</th>
@@ -20,7 +24,7 @@
                 <td th:text="${item.quantity}"></td>
                 <td><input type="text" value="0" th:name="${item.id}" /></td>
             </tr>
-        <table>
+        </table>
         <input type="hidden" name="id" th:value="${shipment.id}" />
         <p><input type="submit" value="Submit" /></p>
     </form>

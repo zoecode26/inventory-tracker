@@ -2,15 +2,19 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Update Item</title>
     <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/styles.css}">
 </head>
 <body>
-<form action="#" th:action="@{/items/perform-update}" th:object="${item}" method="post">
-    <input type="hidden" name="id" th:value="${item.id}" />
-    <p>Item name: <input type="text" th:value="${item.name}" th:field="*{name}" /></p>
-    <p>Quantity: <input type="text" th:value="${item.quantity}" th:field="*{quantity}" /></p>
-    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
-</form>
+    <form action="/">
+        <input type="submit" value="Home" />
+    </form>
+    <h2> Update Item </h2>
+    <form action="#" th:action="@{/items/perform-update}" th:object="${item}" method="post">
+        <input type="hidden" name="id" th:value="${item.id}" />
+        <p>Item name: <input type="text" th:value="${item.name}" th:field="*{name}" /></p>
+        <p>Quantity: <input type="text" th:value="${item.quantity}" th:field="*{quantity}" /></p>
+        <p><input type="submit" value="Submit" /></p>
+    </form>
 </body>
 </html>

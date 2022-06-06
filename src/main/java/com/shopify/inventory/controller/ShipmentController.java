@@ -2,18 +2,22 @@ package com.shopify.inventory.controller;
 
 import com.shopify.inventory.dao.ItemDAO;
 import com.shopify.inventory.dao.ShipmentDAO;
-
-import java.util.*;
-import java.util.stream.StreamSupport;
-
 import com.shopify.inventory.dao.ShipmentItemDAO;
 import com.shopify.inventory.model.Item;
 import com.shopify.inventory.model.Shipment;
 import com.shopify.inventory.model.ShipmentItem;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.StreamSupport;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping(value = "/shipments", method = { RequestMethod.GET})
@@ -35,65 +39,61 @@ public class ShipmentController {
         return "shipments";
     }
 
-    @GetMapping("/{shipment_id}")
-    public Optional<Shipment> getShipment(@PathVariable(value = "shipment_id") Long shipment_id) {
-        return shipmentDAO.findById(shipment_id);
-    }
-
-    @GetMapping("/get-shipment-by-id")
-    public String getShipmentId() {
+    @GetMapping("/get-shipment")
+    public String getShipment() {
         return "shipment-id";
     }
 
-    @PostMapping("/get-shipment-details")
-    public String getShipment(@RequestParam String id, Model model) {
+    @PostMapping("/perform-get-shipment")
+    public String performGetShipment(@RequestParam String id, Model model) {
         Optional<Shipment> shipment = shipmentDAO.findById(Long.parseLong(id));
         List<Item> items = new ArrayList<>();
         if (shipment.isPresent()) {
             Iterable<ShipmentItem> shipmentItems = shipmentItemDAO.findAllByShipmentId(Long.parseLong(id));
             StreamSupport.stream(shipmentItems.spliterator(), false).forEach(a -> {
-                Item item = new Item();
+                // Create item object that represents item in shipment
                 Item retrievedItem = itemDAO.findById(a.getItemId()).get();
+                Item item = new Item();
                 item.setId(retrievedItem.getId());
                 item.setName(retrievedItem.getName());
                 item.setQuantity(a.getQuantity());
                 items.add(item);
             });
-            System.out.println(items.toString());
             model.addAttribute("shipment", shipment.get());
             model.addAttribute("items", items);
         }
-        return "get-shipment-by-id";
+        else {
+            model.addAttribute("message", "Shipment '" + id + "' not found");
+            return "error";
+        }
+        return "get-shipment";
     }
 
     @GetMapping("/create-shipment")
-    public String getShipmentDetails(Model model) {
+    public String createShipment(Model model) {
         model.addAttribute("shipment", new Shipment());
         return "create-shipment";
     }
 
-    @PostMapping("/create-new-shipment")
-    public String createShipment(Shipment shipment, Model model) {
+    @PostMapping("/perform-create-shipment")
+    public String performCreateShipment(Shipment shipment, Model model) {
         Shipment addedShipment = shipmentDAO.save(shipment);
-        model.addAttribute("shipment", addedShipment);
         Iterable<Item> items = itemDAO.findAll();
+        model.addAttribute("shipment", addedShipment);
         model.addAttribute("items", items);
         model.addAttribute("item", new Item());
         return "populate-shipment";
     }
 
-    @GetMapping("/populate-shipment")
-    public String getShipmentTemplate(Model model) {
-        Iterable<Item> items = itemDAO.findAll();
-        model.addAttribute("items", items);
-        model.addAttribute("item", new Item());
-        return "create-shipment";
-    }
-
-    @PostMapping("/populate-new-shipment")
-    public String createShipment(@RequestParam Map<String,String> allParams) {
+    // Adds specified items to the shipment created in performCreateShipment
+    @PostMapping("/perform-populate-shipment")
+    public String createShipment(@RequestParam Map<String,String> allParams, Model model) {
         allParams.forEach((key, value) -> {
             if (!value.equals("0") && !key.equals("id")) {
+                Item item = itemDAO.findById(Long.parseLong(key)).get();
+                item.setQuantity(item.getQuantity() - Integer.parseInt(value));
+                itemDAO.save(item);
+
                 ShipmentItem shipmentItem = new ShipmentItem();
                 shipmentItem.setShipmentId(Long.parseLong(allParams.get("id")));
                 shipmentItem.setItemId(Long.parseLong(key));
@@ -101,6 +101,6 @@ public class ShipmentController {
                 shipmentItemDAO.save(shipmentItem);
             }
         });
-        return "index";
+        return "redirect:/";
     }
 }
