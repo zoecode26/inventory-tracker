@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(value = "/shipments", method = { RequestMethod.GET})
 public class ShipmentController {
     private final ShipmentDAO shipmentDAO;
-    private final ItemDAO itemDAO;
+    private static ItemDAO itemDAO = null;
     private final ShipmentItemDAO shipmentItemDAO;
 
     public ShipmentController(ShipmentDAO shipmentDAO, ItemDAO itemDAO, ShipmentItemDAO shipmentItemDAO) {
         this.shipmentDAO = shipmentDAO;
-        this.itemDAO = itemDAO;
+        ShipmentController.itemDAO = itemDAO;
         this.shipmentItemDAO = shipmentItemDAO;
     }
 
@@ -47,25 +47,20 @@ public class ShipmentController {
     @PostMapping("/perform-get-shipment")
     public String performGetShipment(@RequestParam String id, Model model) {
         Optional<Shipment> shipment = shipmentDAO.findById(Long.parseLong(id));
+        if (!shipment.isPresent()) {
+            throwError(model, "Shipment '" + id + "' not found");
+        }
+
         List<Item> items = new ArrayList<>();
-        if (shipment.isPresent()) {
-            Iterable<ShipmentItem> shipmentItems = shipmentItemDAO.findAllByShipmentId(Long.parseLong(id));
-            StreamSupport.stream(shipmentItems.spliterator(), false).forEach(a -> {
-                // Create item object that represents item in shipment
-                Item retrievedItem = itemDAO.findById(a.getItemId()).get();
-                Item item = new Item();
-                item.setId(retrievedItem.getId());
-                item.setName(retrievedItem.getName());
-                item.setQuantity(a.getQuantity());
-                items.add(item);
-            });
-            model.addAttribute("shipment", shipment.get());
-            model.addAttribute("items", items);
-        }
-        else {
-            model.addAttribute("message", "Shipment '" + id + "' not found");
-            return "error";
-        }
+        Iterable<ShipmentItem> shipmentItems = shipmentItemDAO.findAllByShipmentId(Long.parseLong(id));
+        StreamSupport.stream(shipmentItems.spliterator(), false).forEach(a -> {
+            // Create item object that represents item in shipment
+            Item retrievedItem = itemDAO.findById(a.getItemId()).get();
+            items.add(new Item(retrievedItem.getId(), retrievedItem.getName(), 0, retrievedItem.getQuantity()));
+        });
+
+        model.addAttribute("shipment", shipment.get());
+        model.addAttribute("items", items);
         return "get-shipment";
     }
 
@@ -91,26 +86,31 @@ public class ShipmentController {
         for (Map.Entry<String, String> entry: allParams.entrySet()) {
             Integer value = Integer.parseInt(entry.getValue());
             if (value < 0) {
-                model.addAttribute("message", "Cannot populate shipment with negative quantity");
-                return "error";
+                return throwError(model, "Cannot populate shipment with negative quantity");
             }
             if (!entry.getValue().equals("0") && !entry.getKey().equals("id")) {
                 Long key = Long.parseLong(entry.getKey());
                 Item item = itemDAO.findById(key).get();
                 if (item.getQuantity() < value) {
-                    model.addAttribute("message", "Cannot add " + value + " x " + item.getName() + ". Only " + item.getQuantity() + " in stock.");
-                    return "error";
+                    return throwError(model, "Cannot add " + value + " x " + item.getName() +
+                                                        ". Only " + item.getQuantity() + " in stock.");
                 }
                 item.setQuantity(item.getQuantity() - value);
                 itemDAO.save(item);
-
-                ShipmentItem shipmentItem = new ShipmentItem();
-                shipmentItem.setShipmentId(Long.parseLong(allParams.get("id")));
-                shipmentItem.setItemId(key);
-                shipmentItem.setQuantity(value);
-                shipmentItemDAO.save(shipmentItem);
+                shipmentItemDAO.save(new ShipmentItem(0L, Long.parseLong(allParams.get("id")), key, value));
             }
         }
         return "redirect:/";
+    }
+
+    private static String throwError(Model model, String message) {
+        model.addAttribute("message", message);
+        return "error";
+    }
+
+    private static String itemsDisplay(Model model) {
+        Iterable<Item> items = itemDAO.findAll();
+        model.addAttribute("items", items);
+        return "items";
     }
 }
