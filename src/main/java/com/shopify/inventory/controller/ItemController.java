@@ -2,7 +2,6 @@ package com.shopify.inventory.controller;
 
 import com.shopify.inventory.dao.ItemDAO;
 import com.shopify.inventory.model.Item;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,17 +10,15 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping(value = "/items")
 public class ItemController {
-    private final ItemDAO itemDAO;
+    private static ItemDAO itemDAO = null;
 
     public ItemController(ItemDAO itemDAO) {
-        this.itemDAO = itemDAO;
+        ItemController.itemDAO = itemDAO;
     }
 
     @GetMapping("")
     public String getItems(Model model) {
-        Iterable<Item> items = itemDAO.findAll();
-        model.addAttribute("items", items);
-        return "items";
+        return itemsDisplay(model);
     }
 
     @GetMapping("/get-item")
@@ -36,8 +33,9 @@ public class ItemController {
         if (item.isPresent()) {
             model.addAttribute("items", item.get());
             return "items";
+        } else {
+            return throwError(model, "Item with ID '" + id + "' not found");
         }
-        return "Item with ID not found";
     }
 
     @GetMapping("/create-item")
@@ -48,10 +46,12 @@ public class ItemController {
 
     @PostMapping("/perform-create")
     public String performCreate(Item item, Model model) {
-        itemDAO.save(item);
-        Iterable<Item> items = itemDAO.findAll();
-        model.addAttribute("items", items);
-        return "items";
+        if (item.getQuantity() > 0) {
+            itemDAO.save(item);
+            return itemsDisplay(model);
+        } else {
+            return throwError(model, "Cannot add item with negative or zero quantity");
+        }
     }
 
     @GetMapping("/update-item")
@@ -64,12 +64,14 @@ public class ItemController {
     @PostMapping("/display-update")
     public String displayUpdate(@RequestParam String id, Model model) {
         Optional<Item> item = itemDAO.findById(Long.parseLong(id));
-        if (item.isPresent()) {
-            model.addAttribute("item", item.get());
-            return "update-item";
+        if (!item.isPresent()) {
+            return throwError(model, "Item with ID '" + id + "' not found");
         }
-        model.addAttribute("message", "Item with ID '" + id + "' not found");
-        return "error";
+        if (item.get().getQuantity() < 0) {
+            return throwError(model, "Cannot update item with negative quantity");
+        }
+        model.addAttribute("item", item.get());
+        return "update-item";
     }
 
     @PostMapping("/perform-update")
@@ -94,11 +96,17 @@ public class ItemController {
         try {
             itemDAO.deleteById(Long.parseLong(id));
         } catch (Exception err) {
-            model.addAttribute("message", "Cannot delete item with ID of '"
-                    + id + "' as it is part of a shipment.");
-            return "error";
+            throwError(model, "Cannot delete item with ID of '" + id + "' as it is part of a shipment.");
         }
+        return itemsDisplay(model);
+    }
 
+    private static String throwError(Model model, String message) {
+        model.addAttribute("message", message);
+        return "error";
+    }
+
+    private static String itemsDisplay(Model model) {
         Iterable<Item> items = itemDAO.findAll();
         model.addAttribute("items", items);
         return "items";

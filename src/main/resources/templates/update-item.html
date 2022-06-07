@@ -12,8 +12,8 @@
     <h2> Update Item </h2>
     <form action="#" th:action="@{/items/perform-update}" th:object="${item}" method="post">
         <input type="hidden" name="id" th:value="${item.id}" />
-        <p>Item name: <input type="text" th:value="${item.name}" th:field="*{name}" /></p>
-        <p>Quantity: <input type="text" th:value="${item.quantity}" th:field="*{quantity}" /></p>
+        <p>Item name: <input required type="text" th:value="${item.name}" th:field="*{name}" /></p>
+        <p>Quantity: <input required type="number" th:value="${item.quantity}" th:field="*{quantity}" /></p>
         <p><input type="submit" value="Submit" /></p>
     </form>
 </body>

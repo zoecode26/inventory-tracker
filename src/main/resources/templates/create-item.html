@@ -11,8 +11,8 @@
     </form>
     <h2> Create Item </h2>
     <form action="#" th:action="@{/items/perform-create}" th:object="${item}" method="post">
-        <p>Item name: <input type="text" th:field="*{name}" /></p>
-        <p>Quantity: <input type="text" th:field="*{quantity}" /></p>
+        <p>Item name: <input required type="text" th:field="*{name}" /></p>
+        <p>Quantity: <input required type="number" th:field="*{quantity}" /></p>
         <p><input type="submit" value="Submit" /></p>
     </form>
 </body>

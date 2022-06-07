@@ -22,7 +22,7 @@
                 <td th:text="${item.id}"></td>
                 <td th:text="${item.name}"></td>
                 <td th:text="${item.quantity}"></td>
-                <td><input type="text" value="0" th:name="${item.id}" /></td>
+                <td><input required type="number" value="0" th:name="${item.id}" /></td>
             </tr>
         </table>
         <input type="hidden" name="id" th:value="${shipment.id}" />

@@ -11,13 +11,13 @@
     </form>
     <h2> Create Shipment </h2>
     <form action="perform-create-shipment" th:object="${shipment}" method="post">
-        <p>Customer name: <input type="text" th:field="*{customerName}"/></p>
-        <p>Date: <input type="date" th:field="*{date}"/></p>
-        <p>Address line 1: <input type="text" th:field="*{addressLineOne}"/></p>
+        <p>Customer name: <input required type="text" th:field="*{customerName}"/></p>
+        <p>Date: <input required type="date" th:field="*{date}"/></p>
+        <p>Address line 1: <input required type="text" th:field="*{addressLineOne}"/></p>
         <p>Address line 2: <input type="text" th:field="*{addressLineTwo}"/></p>
-        <p>City: <input type="text" th:field="*{city}"/></p>
-        <p>County: <input type="text" th:field="*{county}"/></p>
-        <p>Postcode: <input type="text" th:field="*{postcode}"/></p>
+        <p>City: <input required type="text" th:field="*{city}"/></p>
+        <p>County: <input required type="text" th:field="*{county}"/></p>
+        <p>Postcode: <input required type="text" th:field="*{postcode}"/></p>
         <p><input type="submit" value="Submit" />
     </form>
 </body>

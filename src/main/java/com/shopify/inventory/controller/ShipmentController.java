@@ -88,19 +88,29 @@ public class ShipmentController {
     // Adds specified items to the shipment created in performCreateShipment
     @PostMapping("/perform-populate-shipment")
     public String createShipment(@RequestParam Map<String,String> allParams, Model model) {
-        allParams.forEach((key, value) -> {
-            if (!value.equals("0") && !key.equals("id")) {
-                Item item = itemDAO.findById(Long.parseLong(key)).get();
-                item.setQuantity(item.getQuantity() - Integer.parseInt(value));
+        for (Map.Entry<String, String> entry: allParams.entrySet()) {
+            Integer value = Integer.parseInt(entry.getValue());
+            if (value < 0) {
+                model.addAttribute("message", "Cannot populate shipment with negative quantity");
+                return "error";
+            }
+            if (!entry.getValue().equals("0") && !entry.getKey().equals("id")) {
+                Long key = Long.parseLong(entry.getKey());
+                Item item = itemDAO.findById(key).get();
+                if (item.getQuantity() < value) {
+                    model.addAttribute("message", "Cannot add " + value + " x " + item.getName() + ". Only " + item.getQuantity() + " in stock.");
+                    return "error";
+                }
+                item.setQuantity(item.getQuantity() - value);
                 itemDAO.save(item);
 
                 ShipmentItem shipmentItem = new ShipmentItem();
                 shipmentItem.setShipmentId(Long.parseLong(allParams.get("id")));
-                shipmentItem.setItemId(Long.parseLong(key));
-                shipmentItem.setQuantity(Integer.parseInt(value));
+                shipmentItem.setItemId(key);
+                shipmentItem.setQuantity(value);
                 shipmentItemDAO.save(shipmentItem);
             }
-        });
+        }
         return "redirect:/";
     }
 }

@@ -24,7 +24,7 @@
         <tr th:each="shipment: ${shipments}">
             <td th:text="${shipment.id}"></td>
             <td th:text="${shipment.customerName}"></td>
-            <td th:text="${shipment.date}"></td>
+            <td th:text="${#strings.arraySplit(shipment.date, ' ')[0]}"></td>
             <td th:text="${shipment.addressLineOne}"></td>
             <td th:text="${shipment.addressLineTwo}"></td>
             <td th:text="${shipment.city}"></td>
