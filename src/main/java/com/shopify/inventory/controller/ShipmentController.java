@@ -56,7 +56,7 @@ public class ShipmentController {
         StreamSupport.stream(shipmentItems.spliterator(), false).forEach(a -> {
             // Create item object that represents item in shipment
             Item retrievedItem = itemDAO.findById(a.getItemId()).get();
-            items.add(new Item(retrievedItem.getId(), retrievedItem.getName(), 0, retrievedItem.getQuantity()));
+            items.add(new Item(retrievedItem.getId(), retrievedItem.getName(), retrievedItem.getQuantity()));
         });
 
         model.addAttribute("shipment", shipment.get());

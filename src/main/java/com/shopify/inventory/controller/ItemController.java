@@ -75,7 +75,8 @@ public class ItemController {
     }
 
     @PostMapping("/perform-update")
-    public String performUpdate(@RequestParam String name, @RequestParam String quantity, @RequestParam String id, Model model) {
+    public String performUpdate(@RequestParam String name, @RequestParam String quantity, @RequestParam String id,
+                                Model model) {
         Item item = itemDAO.findById(Long.parseLong(id)).get();
         item.setName(name);
         item.setQuantity(Integer.parseInt(quantity));
