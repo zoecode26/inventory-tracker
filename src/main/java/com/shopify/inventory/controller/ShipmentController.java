@@ -48,7 +48,7 @@ public class ShipmentController {
     public String performGetShipment(@RequestParam String id, Model model) {
         Optional<Shipment> shipment = shipmentDAO.findById(Long.parseLong(id));
         if (!shipment.isPresent()) {
-            throwError(model, "Shipment '" + id + "' not found");
+            return throwError(model, "Shipment '" + id + "' not found");
         }
 
         List<Item> items = new ArrayList<>();
