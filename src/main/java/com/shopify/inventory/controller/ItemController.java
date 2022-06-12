@@ -67,9 +67,6 @@ public class ItemController {
         if (!item.isPresent()) {
             return throwError(model, "Item with ID '" + id + "' not found");
         }
-        if (item.get().getQuantity() < 0) {
-            return throwError(model, "Cannot update item with negative quantity");
-        }
         model.addAttribute("item", item.get());
         return "update-item";
     }
@@ -77,6 +74,9 @@ public class ItemController {
     @PostMapping("/perform-update")
     public String performUpdate(@RequestParam String name, @RequestParam String quantity, @RequestParam String id,
                                 Model model) {
+        if (Integer.parseInt(quantity) < 0) {
+            return throwError(model, "Cannot update item with negative quantity");
+        }
         Item item = itemDAO.findById(Long.parseLong(id)).get();
         item.setName(name);
         item.setQuantity(Integer.parseInt(quantity));

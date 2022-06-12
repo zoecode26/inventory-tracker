@@ -86,12 +86,16 @@ public class ShipmentController {
         for (Map.Entry<String, String> entry: allParams.entrySet()) {
             Integer value = Integer.parseInt(entry.getValue());
             if (value < 0) {
+                //Remove created shipment as it is invalid
+                shipmentDAO.deleteById(Long.parseLong(allParams.get("id")));
                 return throwError(model, "Cannot populate shipment with negative quantity");
             }
             if (!entry.getValue().equals("0") && !entry.getKey().equals("id")) {
                 Long key = Long.parseLong(entry.getKey());
                 Item item = itemDAO.findById(key).get();
                 if (item.getQuantity() < value) {
+                    //Remove created shipment as it is invalid
+                    shipmentDAO.deleteById(Long.parseLong(allParams.get("id")));
                     return throwError(model, "Cannot add " + value + " x " + item.getName() +
                                                         ". Only " + item.getQuantity() + " in stock.");
                 }
