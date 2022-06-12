@@ -94,10 +94,14 @@ public class ItemController {
 
     @PostMapping("/perform-delete")
     public String performDeleteItem(@RequestParam String id, Model model) {
+        if (!itemDAO.existsById(Long.parseLong(id))) {
+            return throwError(model, "Item with ID of '" + id + "' does not exist");
+        }
+
         try {
             itemDAO.deleteById(Long.parseLong(id));
         } catch (Exception err) {
-            throwError(model, "Cannot delete item with ID of '" + id + "' as it is part of a shipment.");
+            return throwError(model, "Cannot delete item with ID of '" + id + "' as it is part of a shipment.");
         }
         return itemsDisplay(model);
     }
